@@ -5,13 +5,16 @@ This is a Python script that generates password list based on user-defined crite
 ## Usage
 
 1. Clone or download the repository to your local machine.
-2. Open a terminal and navigate to the directory containing the script.
-3. Run the script by executing the following command:
+2. Open a terminal and navigate to password_list_generator by.
+   ```
+    cd password_list_generator
+    ```
+4. Run the script by executing the following command:
     ```
     python password_generator.py
     ```
-4. Follow the prompts to input the desired parameters for password generation.
-5. The generated passwords will be saved to a specified file.
+5. Follow the prompts to input the desired parameters for password generation.
+6. The generated passwords will be saved to a specified file.
 
 ## Features
 
