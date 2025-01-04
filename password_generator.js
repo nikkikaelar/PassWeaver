@@ -1,4 +1,3 @@
-// Leetspeak character substitution map
 const leetSubstitutions = {
     'a': ['@', '4', '^'],
     'b': ['8', '6'],
@@ -12,107 +11,134 @@ const leetSubstitutions = {
     'z': ['2', 's']
 };
 
-// Generate leetspeak variations for a given word
+const commonPatterns = ['123', '2023', 'password', 'admin', 'user', 'secure', 'qwerty', 'letmein', 'welcome', 'trustno1', 'master'];
+
+// Function to generate leetspeak variations
 function generateLeetspeakVariations(word) {
-    const variations = new Set([word]);
+    let variations = new Set([word]);
     word = word.toLowerCase();
-    const indices = [...word].map((char, index) => leetSubstitutions[char] ? index : -1).filter(index => index !== -1);
+    const indices = [...word].map((char, i) => leetSubstitutions[char] ? i : -1).filter(i => i !== -1);
 
     for (let length = 1; length <= indices.length; length++) {
-        for (const subset of combinations(indices, length)) {
-            for (const replacements of cartesianProduct(subset.map(index => leetSubstitutions[word[index]]))) {
-                const wordList = [...word];
-                for (let i = 0; i < subset.length; i++) {
-                    wordList[subset[i]] = replacements[i];
-                }
+        for (let subset of combinations(indices, length)) {
+            for (let replacements of cartesianProduct(...subset.map(i => leetSubstitutions[word[i]]))) {
+                let wordList = [...word];
+                subset.forEach((idx, i) => wordList[idx] = replacements[i]);
                 variations.add(wordList.join(''));
             }
         }
     }
-    return Array.from(variations);
+
+    return [...variations];
 }
 
-// Generate common passwords based on keyword
+// Function to generate common password patterns
 function generateCommonPasswords(keyword) {
-    const commonPatterns = ['123', '2023', 'password', 'admin', 'user', 'secure', 'qwerty', 'letmein', 'welcome', 'trustno1', 'master'];
-    const variations = [keyword, keyword.toLowerCase(), keyword.toUpperCase(), keyword.charAt(0).toUpperCase() + keyword.slice(1)];
-    const commonPasswords = new Set();
-    
+    let variations = [keyword, keyword.toLowerCase(), keyword.toUpperCase(), keyword.charAt(0).toUpperCase() + keyword.slice(1)];
+    let commonPasswords = new Set();
     variations.forEach(variation => {
         commonPatterns.forEach(pattern => {
-            commonPasswords.add(`${variation}${pattern}`);
-            commonPasswords.add(`${pattern}${variation}`);
-            commonPasswords.add(`${variation}_${pattern}`);
-            commonPasswords.add(`${pattern}_${variation}`);
+            commonPasswords.add(variation + pattern);
+            commonPasswords.add(pattern + variation);
+            commonPasswords.add(variation + '_' + pattern);
+            commonPasswords.add(pattern + '_' + variation);
         });
     });
-
-    return Array.from(commonPasswords);
+    return [...commonPasswords];
 }
 
-// Helper function to generate combinations of indices
-function combinations(arr, length) {
-    if (length === 0) return [[]];
-    if (arr.length === 0) return [];
-    const first = arr[0];
-    const rest = arr.slice(1);
-    const withFirst = combinations(rest, length - 1).map(comb => [first, ...comb]);
-    const withoutFirst = combinations(rest, length);
-    return withFirst.concat(withoutFirst);
-}
-
-// Helper function to generate the cartesian product of arrays
-function cartesianProduct(arrays) {
-    return arrays.reduce((acc, curr) => {
-        const result = [];
-        acc.forEach(a => {
-            curr.forEach(b => {
-                result.push([...a, b]);
-            });
-        });
-        return result;
-    }, [[]]);
-}
-
-// Add advanced patterns to passwords
-function addAdvancedPatterns(passwords) {
-    const patterns = ['123', '!', '@', '#', 'secure', '2023', 'admin'];
+// Helper function for generating combinations
+function combinations(arr, size) {
     const result = [];
-
-    passwords.forEach(password => {
-        patterns.forEach(pattern => {
-            result.push(`${password}${pattern}`);
-            result.push(`${pattern}${password}`);
-            result.push(`${password}_${pattern}`);
-            result.push(`${password}#${pattern}`);
-        });
-    });
-
-    return passwords.concat(result);
+    const combine = (start, current) => {
+        if (current.length === size) {
+            result.push([...current]);
+            return;
+        }
+        for (let i = start; i < arr.length; i++) {
+            current.push(arr[i]);
+            combine(i + 1, current);
+            current.pop();
+        }
+    };
+    combine(0, []);
+    return result;
 }
 
-// Main function to generate passwords based on keyword
+// Helper function for cartesian product
+function cartesianProduct(...arrays) {
+    return arrays.reduce((a, b) => a.flatMap(d => b.map(e => [...d, e])), [[]]);
+}
+
+// Function to generate the final list of passwords
 function generatePasswords(keyword) {
-    const commonPasswords = generateCommonPasswords(keyword);
-    const leetspeakVariations = generateLeetspeakVariations(keyword);
-    const patternsAddedPasswords = addAdvancedPatterns([...commonPasswords, ...leetspeakVariations]);
-    return patternsAddedPasswords;
+    let commonPasswords = generateCommonPasswords(keyword);
+    let leetspeakVariations = generateLeetspeakVariations(keyword);
+    return [...new Set([...commonPasswords, ...leetspeakVariations])];
 }
 
-// Function to handle password download
-function downloadPasswords(passwords) {
-    const blob = new Blob([passwords.join('\n')], { type: 'text/plain' });
+// Display progress bar
+function updateProgressBar(percentage) {
+    const progressBar = document.getElementById('progress-bar');
+    progressBar.style.width = percentage + '%';
+}
+
+// Display passwords and update count
+function displayPasswords(passwords) {
+    const passwordList = document.getElementById('password-list');
+    passwordList.innerHTML = '';
+    passwords.forEach(password => {
+        const li = document.createElement('li');
+        li.textContent = password;
+        passwordList.appendChild(li);
+    });
+    document.getElementById('password-count').textContent = `Total Passwords Generated: ${passwords.length}`;
+    document.getElementById('download-btn').style.display = 'inline-block';
+}
+
+// Save passwords to a file
+function downloadPasswords() {
+    const passwords = document.querySelectorAll('#password-list li');
+    const passwordArray = Array.from(passwords).map(li => li.textContent);
+    const blob = new Blob([passwordArray.join('\n')], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
+    link.href = url;
     link.download = 'generated_passwords.txt';
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
 }
 
-// Expose the functions for use in HTML
-window.generatePasswords = function(keyword) {
-    return generatePasswords(keyword);
-};
+// Start the password generation process
+function startPasswordGeneration() {
+    const keyword = document.getElementById('keyword').value.trim();
+    if (!keyword.match(/^[a-zA-Z0-9]+$/)) {
+        alert('Invalid input. Please enter a keyword with letters and numbers only.');
+        return;
+    }
 
-window.downloadPasswords = function(passwords) {
-    downloadPasswords(passwords);
-};
+    // Disable input while generating passwords
+    document.getElementById('keyword').disabled = true;
+    document.querySelector('button').disabled = true;
+
+    let passwords = [];
+    let totalSteps = 100; // Simulated progress steps
+    let step = 0;
+
+    // Simulate the password generation and progress bar update
+    let interval = setInterval(() => {
+        let percentage = (step / totalSteps) * 100;
+        updateProgressBar(percentage);
+
+        if (step === totalSteps) {
+            clearInterval(interval);
+            passwords = generatePasswords(keyword);
+            displayPasswords(passwords);
+            document.getElementById('keyword').disabled = false;
+            document.querySelector('button').disabled = false;
+        }
+
+        step++;
+    }, 50);
+}
