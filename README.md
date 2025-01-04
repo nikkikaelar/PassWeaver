@@ -1,7 +1,7 @@
 # Ultimate Password List Generator for Brute Force Attacks
 
 ## Description
-Welcome to the **Cyber Leet Password Generator!**  
+Welcome to the **Password Generator!**  
 This tool generates complex password variations by combining leetspeak, common patterns, and machine learning techniques. Ideal for penetration testers, cybersecurity enthusiasts, and researchers, it helps in generating high-quality password lists for brute-force testing.
 
 **Features:**
