@@ -1,0 +1,150 @@
+/* General body styles */
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #0f0f0f;
+    color: #00ff00;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Styling for the intro text and header */
+h1, h2 {
+    color: #33cc33;
+    font-size: 2.5em;
+    text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
+    margin-bottom: 20px;
+    animation: pulse 1.5s infinite;
+}
+
+h2 {
+    font-size: 1.5em;
+    color: #ff9900;
+}
+
+/* Styling for the description */
+p {
+    color: #cccccc;
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+/* Cyber-style button */
+button {
+    background-color: #333;
+    color: #00ff00;
+    font-size: 1.2em;
+    border: 2px solid #00ff00;
+    padding: 15px 25px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px #00ff00;
+}
+
+button:hover {
+    background-color: #00ff00;
+    color: #333;
+    box-shadow: 0 0 15px #00ff00, 0 0 20px #00ff00;
+}
+
+/* Style for the password list */
+ul.password-list {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+    font-size: 1.1em;
+    color: #00ff00;
+}
+
+ul.password-list li {
+    margin-bottom: 10px;
+    animation: fadeIn 1s ease-out;
+}
+
+/* Glowing effect for the generated password text */
+.glow {
+    text-shadow: 0 0 15px #00ff00, 0 0 30px #00ff00, 0 0 45px #00ff00;
+    animation: glowAnimation 2s infinite alternate;
+}
+
+/* Button for downloading the password file */
+.download-btn {
+    background-color: #ff3333;
+    color: #ffffff;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px #ff3333;
+}
+
+.download-btn:hover {
+    background-color: #ffffff;
+    color: #ff3333;
+    box-shadow: 0 0 20px #ff3333, 0 0 30px #ff3333;
+}
+
+/* Glowing ascii art */
+.ascii-art {
+    font-size: 1.2em;
+    color: #00ff00;
+    text-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00, 0 0 60px #00ff00;
+}
+
+/* Keyframe animations */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes glowAnimation {
+    0% {
+        text-shadow: 0 0 15px #00ff00, 0 0 30px #00ff00, 0 0 45px #00ff00;
+    }
+    50% {
+        text-shadow: 0 0 25px #00ff00, 0 0 50px #00ff00, 0 0 75px #00ff00;
+    }
+    100% {
+        text-shadow: 0 0 15px #00ff00, 0 0 30px #00ff00, 0 0 45px #00ff00;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Style for the progress bar */
+.progress-container {
+    width: 80%;
+    background-color: #333;
+    border-radius: 5px;
+    height: 20px;
+    margin-top: 20px;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #00ff00;
+    width: 0;
+    border-radius: 5px;
+    transition: width 0.3s;
+}
