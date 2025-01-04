@@ -69,9 +69,8 @@ password!secure
 ...
 ```
 
-## License
+## Warning 
 This tool is provided for educational and research purposes only. Use it responsibly and only in environments where you have permission to perform security testing.
 
 ---
 
-Let me know if you need any changes or additions!
