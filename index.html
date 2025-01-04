@@ -3,111 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber Leet Password Generator</title>
+    <title>Password Generator</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1a1a1a;
-            color: #ffffff;
-            text-align: center;
-        }
-
-        h1 {
-            color: #ff4d4d;
-            margin-top: 30px;
-        }
-
-        input {
-            padding: 10px;
-            margin-top: 20px;
-            width: 300px;
-            border: 2px solid #fff;
-            background-color: #333;
-            color: #fff;
-        }
-
-        button {
-            padding: 10px 20px;
-            margin-top: 20px;
-            background-color: #ff4d4d;
-            border: none;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #ff6666;
-        }
-
-        #passwords {
-            margin-top: 20px;
-            color: #00ff00;
-        }
-
-        #downloadBtn {
-            display: none;
-            margin-top: 20px;
-        }
-    </style>
 </head>
 <body>
-    <h1>Ultimate Password List Generator</h1>
-    <p>Enter a keyword to generate passwords:</p>
-    <input type="text" id="keyword" placeholder="Enter Keyword" required>
-    <button onclick="generatePasswords()">Generate Passwords</button>
+
+    <h1>Ultimate Password List Generator for Brute Force Attacks</h1>
+    <h2>Generate multiple password variations based on leetspeak, common patterns, and advanced algorithms.</h2>
+    <p>Enter a keyword to begin generating passwords:</p>
     
-    <div id="passwords"></div>
-    <button id="downloadBtn" onclick="downloadPasswords()">Download Passwords</button>
+    <!-- User Input -->
+    <input type="text" id="keyword" placeholder="Enter a keyword" />
+    <button onclick="startPasswordGeneration()">Generate Passwords</button>
 
-    <script>
-        // Placeholder for the function to generate passwords
-        function generatePasswords() {
-            const keyword = document.getElementById('keyword').value;
+    <!-- Progress bar container -->
+    <div class="progress-container">
+        <div id="progress-bar" class="progress-bar"></div>
+    </div>
 
-            if (!keyword) {
-                alert("Please enter a valid keyword.");
-                return;
-            }
+    <!-- Display generated passwords -->
+    <ul id="password-list" class="password-list"></ul>
 
-            // Simulating password generation logic
-            const passwords = [
-                `${keyword}123`,
-                `${keyword}@2023`,
-                `${keyword}Secure`,
-                `123${keyword}`,
-                `${keyword}Admin`
-            ];
+    <!-- Display total password count -->
+    <div id="password-count" class="password-count"></div>
 
-            // Display the passwords on the page
-            let passwordsDiv = document.getElementById('passwords');
-            passwordsDiv.innerHTML = "<h3>Generated Passwords:</h3>";
-            passwords.forEach(password => {
-                let passwordEl = document.createElement('p');
-                passwordEl.textContent = password;
-                passwordsDiv.appendChild(passwordEl);
-            });
+    <!-- Button for downloading password file -->
+    <button id="download-btn" class="download-btn" style="display:none;" onclick="downloadPasswords()">Download Passwords</button>
 
-            // Show the download button
-            document.getElementById('downloadBtn').style.display = 'block';
-        }
-
-        // Function to download the passwords
-        function downloadPasswords() {
-            const passwords = [
-                'keyword123',
-                'keyword@2023',
-                'keywordSecure',
-                '123keyword',
-                'keywordAdmin'
-            ];  // This should come from the password generation logic
-            const blob = new Blob([passwords.join('\n')], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'generated_passwords.txt';
-            link.click();
-        }
-    </script>
+    <script src="password_generator.js"></script>
 </body>
 </html>
