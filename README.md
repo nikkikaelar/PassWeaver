@@ -1,28 +1,76 @@
-# Random Password List Generator Tool
+# Ultimate Password List Generator for Brute Force Attacks
 
-This is a Python script that generates password list based on user-defined criteria. The list can be generated similiar to rockyou.txt, Users can specify the minimum and maximum length of the passwords, as well as choose which characters to include (alphabets, numbers, and special characters).
+## Description
+Welcome to the **Cyber Leet Password Generator!**  
+This tool generates complex password variations by combining leetspeak, common patterns, and machine learning techniques. Ideal for penetration testers, cybersecurity enthusiasts, and researchers, it helps in generating high-quality password lists for brute-force testing.
+
+**Features:**
+- Leetspeak password variations.
+- Common password patterns and combinations.
+- Machine learning to generate more sophisticated variations.
+- Stylish terminal UI with hacker-like visuals.
+- Passwords saved to a text file for use in security testing.
+
+## Requirements
+To run this script, you will need:
+- Python 3.x
+- Libraries: `itertools`, `random`, `string`, `re`, `termcolor`, `time`, `sys`, `joblib`, `sklearn`
+- You can install the required libraries by running:
+  ```
+  pip install termcolor joblib scikit-learn
+  ```
 
 ## Usage
 
-1. Clone or download the repository to your local machine.
-2. Open a terminal and navigate to password_list_generator by.
+1. Clone the repository or download the script.
+2. Ensure you have the necessary Python libraries installed.
+3. Run the script in your terminal:
+
    ```
-    cd password_list_generator
-    ```
-4. Run the script by executing the following command:
-    ```
-    python password_generator.py
-    ```
-5. Follow the prompts to input the desired parameters for password generation.
-6. The generated passwords will be saved to a specified file.
+   python password_generator.py
+   ```
 
-## Features
+4. Enter a keyword when prompted to generate passwords.
+   - The script will generate variations of your keyword with common patterns and leetspeak.
+   - Passwords will be enhanced using machine learning based on a corpus of common passwords.
+   
+5. The generated passwords will be displayed in the terminal and saved to a file `generated_passwords.txt`.
 
-- Customize password length and character types.
-- Generates passwords with combinations of alphabets, numbers, and special characters.
-- Provides progress updates during password generation.
-- Saves generated passwords to a specified file.
+## Script Breakdown
 
-## Requirements
+### 1. **Leetspeak Generation:**
+   - The script generates variations of a word using leetspeak, including substitutions like `a` → `@`, `e` → `3`, and others.
 
-- Python 3.0
+### 2. **Common Password Patterns:**
+   - The generator creates password variations by adding common patterns (e.g., `123`, `secure`, `admin`) to the input keyword.
+
+### 3. **Machine Learning:**
+   - It uses a `LogisticRegression` model trained on a list of common passwords to create more sophisticated variations.
+
+### 4. **Progress Bar:**
+   - A stylish progress bar is displayed to visualize the generation process, enhancing the user experience.
+
+### 5. **Hacker-Style UI:**
+   - The terminal UI is designed with a hacker-inspired theme, using color and delay to simulate a “real” hacking experience.
+
+### 6. **Password File Output:**
+   - After the passwords are generated, they are saved to `generated_passwords.txt` for further use.
+
+## Example
+
+```
+Enter a keyword to generate passwords: 
+=> password
+
+Generated Passwords:
+password123
+password2023
+password!secure
+...
+```
+
+## Warning 
+This tool is provided for educational and research purposes only. Use it responsibly and only in environments where you have permission to perform security testing.
+
+---
+
