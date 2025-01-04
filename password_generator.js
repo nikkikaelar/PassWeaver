@@ -5,6 +5,7 @@ const leetSubstitutions = {
     'e': ['3', '&'],
     'g': ['6', '9', 'q'],
     'i': ['1', '!', '|', 'l'],
+    'l': ['1', '|', '/', '\\'],
     'o': ['0', 'Q', '*'],
     's': ['$', '5', 'z'],
     't': ['7', '+', '†'],
@@ -13,132 +14,138 @@ const leetSubstitutions = {
 
 const commonPatterns = ['123', '2023', 'password', 'admin', 'user', 'secure', 'qwerty', 'letmein', 'welcome', 'trustno1', 'master'];
 
-// Function to generate leetspeak variations
+let generatedPasswords = [];
+
+// Generate leetspeak variations for a given word with alternating complexity
 function generateLeetspeakVariations(word) {
     let variations = new Set([word]);
     word = word.toLowerCase();
-    const indices = [...word].map((char, i) => leetSubstitutions[char] ? i : -1).filter(i => i !== -1);
+    let indices = [...word].map((char, idx) => leetSubstitutions[char] ? idx : -1).filter(idx => idx !== -1);
 
     for (let length = 1; length <= indices.length; length++) {
-        for (let subset of combinations(indices, length)) {
-            for (let replacements of cartesianProduct(...subset.map(i => leetSubstitutions[word[i]]))) {
+        for (let subset of getCombinations(indices, length)) {
+            for (let replacements of getProduct(...subset.map(idx => leetSubstitutions[word[idx]]))) {
                 let wordList = [...word];
-                subset.forEach((idx, i) => wordList[idx] = replacements[i]);
+                subset.forEach((idx, i) => {
+                    wordList[idx] = replacements[i];
+                });
                 variations.add(wordList.join(''));
             }
         }
     }
-
-    return [...variations];
+    return Array.from(variations);
 }
 
-// Function to generate common password patterns
-function generateCommonPasswords(keyword) {
-    let variations = [keyword, keyword.toLowerCase(), keyword.toUpperCase(), keyword.charAt(0).toUpperCase() + keyword.slice(1)];
-    let commonPasswords = new Set();
-    variations.forEach(variation => {
-        commonPatterns.forEach(pattern => {
-            commonPasswords.add(variation + pattern);
-            commonPasswords.add(pattern + variation);
-            commonPasswords.add(variation + '_' + pattern);
-            commonPasswords.add(pattern + '_' + variation);
-        });
-    });
-    return [...commonPasswords];
-}
-
-// Helper function for generating combinations
-function combinations(arr, size) {
-    const result = [];
-    const combine = (start, current) => {
-        if (current.length === size) {
-            result.push([...current]);
+// Generate combinations of indices
+function getCombinations(arr, length) {
+    let result = [];
+    function combine(start, path) {
+        if (path.length === length) {
+            result.push(path);
             return;
         }
         for (let i = start; i < arr.length; i++) {
-            current.push(arr[i]);
-            combine(i + 1, current);
-            current.pop();
+            combine(i + 1, [...path, arr[i]]);
         }
-    };
+    }
     combine(0, []);
     return result;
 }
 
-// Helper function for cartesian product
-function cartesianProduct(...arrays) {
-    return arrays.reduce((a, b) => a.flatMap(d => b.map(e => [...d, e])), [[]]);
+// Get all possible combinations of elements
+function getProduct(...arrays) {
+    return arrays.reduce((acc, arr) => {
+        let result = [];
+        acc.forEach(a => arr.forEach(b => result.push([...a, b])));
+        return result;
+    }, [[]]);
 }
 
-// Function to generate the final list of passwords
+// Add common patterns based on user input
+function generateCommonPasswords(keyword) {
+    let variations = [keyword, keyword.toLowerCase(), keyword.toUpperCase(), keyword.charAt(0).toUpperCase() + keyword.slice(1)];
+    let commonPasswords = new Set();
+
+    variations.forEach(variation => {
+        commonPatterns.forEach(pattern => {
+            commonPasswords.add(`${variation}${pattern}`);
+            commonPasswords.add(`${pattern}${variation}`);
+            commonPasswords.add(`${variation}_${pattern}`);
+            commonPasswords.add(`${pattern}_${variation}`);
+        });
+    });
+    return Array.from(commonPasswords);
+}
+
+// Generate final list of passwords
 function generatePasswords(keyword) {
     let commonPasswords = generateCommonPasswords(keyword);
-    let leetspeakVariations = generateLeetspeakVariations(keyword);
-    return [...new Set([...commonPasswords, ...leetspeakVariations])];
+    let keywordVariations = generateLeetspeakVariations(keyword);
+    let finalPasswords = new Set([...commonPasswords, ...keywordVariations]);
+    return Array.from(finalPasswords);
 }
 
-// Display progress bar
-function updateProgressBar(percentage) {
+// Handle progress bar
+function updateProgressBar(progress) {
     const progressBar = document.getElementById('progress-bar');
-    progressBar.style.width = percentage + '%';
+    progressBar.style.width = `${progress}%`;
 }
 
-// Display passwords and update count
-function displayPasswords(passwords) {
+// Function to handle password generation and progress display
+function startPasswordGeneration() {
+    const keyword = document.getElementById('keyword').value.trim();
+    if (!/^[a-zA-Z0-9]+$/.test(keyword)) {
+        alert("Please enter a valid keyword (letters and numbers only).");
+        return;
+    }
+
+    // Hide the input and show the progress
+    document.getElementById('keyword').disabled = true;
+    document.querySelector("button").disabled = true;
+    document.getElementById('password-list').innerHTML = '';
+    document.getElementById('password-count').innerHTML = '';
+    document.getElementById('download-btn').style.display = 'none';
+
+    let totalSteps = 100;
+    let generatedPasswords = [];
+    let step = 0;
+
+    let interval = setInterval(() => {
+        step++;
+        updateProgressBar((step / totalSteps) * 100);
+        if (step >= totalSteps) {
+            clearInterval(interval);
+            generatedPasswords = generatePasswords(keyword);
+            displayGeneratedPasswords(generatedPasswords);
+            showDownloadButton();
+        }
+    }, 50);
+}
+
+// Display generated passwords
+function displayGeneratedPasswords(passwords) {
     const passwordList = document.getElementById('password-list');
-    passwordList.innerHTML = '';
     passwords.forEach(password => {
         const li = document.createElement('li');
         li.textContent = password;
         passwordList.appendChild(li);
     });
-    document.getElementById('password-count').textContent = `Total Passwords Generated: ${passwords.length}`;
+
+    // Display total number of passwords
+    const passwordCount = document.getElementById('password-count');
+    passwordCount.textContent = `Total Passwords Generated: ${passwords.length}`;
+}
+
+// Show download button
+function showDownloadButton() {
     document.getElementById('download-btn').style.display = 'inline-block';
 }
 
-// Save passwords to a file
+// Download the generated passwords as a .txt file
 function downloadPasswords() {
-    const passwords = document.querySelectorAll('#password-list li');
-    const passwordArray = Array.from(passwords).map(li => li.textContent);
-    const blob = new Blob([passwordArray.join('\n')], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
+    const blob = new Blob([generatedPasswords.join('\n')], { type: 'text/plain' });
     const link = document.createElement('a');
-    link.href = url;
+    link.href = URL.createObjectURL(blob);
     link.download = 'generated_passwords.txt';
-    document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
-}
-
-// Start the password generation process
-function startPasswordGeneration() {
-    const keyword = document.getElementById('keyword').value.trim();
-    if (!keyword.match(/^[a-zA-Z0-9]+$/)) {
-        alert('Invalid input. Please enter a keyword with letters and numbers only.');
-        return;
-    }
-
-    // Disable input while generating passwords
-    document.getElementById('keyword').disabled = true;
-    document.querySelector('button').disabled = true;
-
-    let passwords = [];
-    let totalSteps = 100; // Simulated progress steps
-    let step = 0;
-
-    // Simulate the password generation and progress bar update
-    let interval = setInterval(() => {
-        let percentage = (step / totalSteps) * 100;
-        updateProgressBar(percentage);
-
-        if (step === totalSteps) {
-            clearInterval(interval);
-            passwords = generatePasswords(keyword);
-            displayPasswords(passwords);
-            document.getElementById('keyword').disabled = false;
-            document.querySelector('button').disabled = false;
-        }
-
-        step++;
-    }, 50);
 }
