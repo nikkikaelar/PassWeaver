@@ -14,7 +14,7 @@ This tool generates complex password variations by combining leetspeak, common p
 
 ## Requirements
 To run this script, you will need:
-- Python 3.x
+- Python 3.12
 - Libraries: `itertools`, `random`, `string`, `re`, `termcolor`, `time`, `sys`, `joblib`, `sklearn`
 - You can install the required libraries by running:
   ```
