@@ -1,4 +1,5 @@
 # Ultimate Password List Generator for Brute Force Attacks
+![image](https://github.com/user-attachments/assets/28be569f-8b22-4366-9fac-e25134364869)
 
 ## Description
 Welcome to the **Password Generator!**  
@@ -15,7 +16,8 @@ This tool generates complex password variations by combining leetspeak, common p
 To run this script, you will need:
 - Python 3.12
 - Libraries: `itertools`, `random`, `string`, `re`, `termcolor`, `time`, `sys`, `joblib`, `sklearn`
-- You can install the required libraries by running:
+- You can install the required libraries by running:![image](https://github.com/user-attachments/assets/51061b78-6836-4441-a21d-63079ca2ba41)
+
   ```
   pip install termcolor joblib scikit-learn
   ```
