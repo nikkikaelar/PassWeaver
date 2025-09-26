@@ -1,2 +1,4 @@
 2025-09-26 08:35:04,988 INFO gen called: keyword=test leet=2 max_len=32 preview=20 out=generated_passwords.txt
 2025-09-26 08:35:04,990 INFO Generated 1253 candidates
+2025-09-26 08:48:04,645 INFO gen called: keyword=test leet=1 max_len=32 preview=5 out=generated_passwords.txt
+2025-09-26 08:48:04,648 INFO Generated 1055 candidates
